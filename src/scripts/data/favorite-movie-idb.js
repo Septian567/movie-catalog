@@ -35,7 +35,8 @@ const FavoriteMovieIdb = {
     return (await dbPromise).delete(OBJECT_STORE_NAME, id);
   },
 
-  async searchMovies(query) {},
+  // eslint-disable-next-line no-unused-vars
+  async searchMovies(_query) {},
 };
 
 export default FavoriteMovieIdb;
