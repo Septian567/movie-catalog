@@ -5,8 +5,8 @@ class FavoriteMovieSearchPresenter {
   }
 
   _listenToSearchRequestByUser() {
-    this._queryElement = document.getElementById("query");
-    this._queryElement.addEventListener("change", (event) => {
+    this._queryElement = document.getElementById('query');
+    this._queryElement.addEventListener('change', (event) => {
       this._searchMovies(event.target.value);
     });
   }
@@ -26,22 +26,25 @@ class FavoriteMovieSearchPresenter {
 
   // eslint-disable-next-line class-methods-use-this
   _showFoundMovies(movies) {
-    console.log(movies);
-    const html = movies.reduce(
-      (carry, movie) =>
-        carry.concat(`
-         <li class="movie">
-          <span class="movie__title">${movie.title || "-"}</span>
+    let html;
+    if (movies.length > 0) {
+      html = movies.reduce(
+        (carry, movie) => carry.concat(`
+        <li class="movie">
+          <span class="movie__title">${movie.title || '-'}</span>
         </li>
-        `),
-      ""
-    );
+      `),
+        '',
+      );
+    } else {
+      html = '<div class="movies__not__found">Film tidak ditemukan</div>';
+    }
 
-    document.querySelector(".movies").innerHTML = html;
+    document.querySelector('.movies').innerHTML = html;
 
     document
-      .getElementById("movie-search-container")
-      .dispatchEvent(new Event("movies:searched:updated"));
+      .getElementById('movie-search-container')
+      .dispatchEvent(new Event('movies:searched:updated'));
   }
 
   get latestQuery() {
