@@ -1,10 +1,12 @@
-// import { spyOn } from 'jest-mock';
+import { spyOn } from 'jest-mock';
 import FavoriteMovieSearchPresenter from '../src/scripts/views/pages/liked-movies/favorite-movie-search-presenter';
-// import FavoriteMovieIdb from '../src/scripts/data/favorite-movie-idb';
+import FavoriteMovieIdb from '../src/scripts/data/favorite-movie-idb';
+import FavoriteMovieSearchView from '../src/scripts/views/pages/liked-movies/favorite-movie-search-view';
 
 describe('Searching movies', () => {
   let presenter;
   let favoriteMovies;
+  let view;
 
   const searchMovies = (query) => {
     const queryElement = document.getElementById('query');
@@ -13,30 +15,21 @@ describe('Searching movies', () => {
     queryElement.dispatchEvent(new Event('change'));
   };
 
-  const setMovieSearchContaner = () => {
-    document.body.innerHTML = `
-      <div id="movie-search-container">
-        <input id="query" type="text">
-        <div class="movie-result-container">
-          <ul class="movies">
-          </ul>
-        </div>
-      </div>
-    `;
+  const setMovieSearchContainer = () => {
+    view = new FavoriteMovieSearchView();
+    document.body.innerHTML = view.getTemplate();
   };
 
   const constructPresenter = () => {
-    favoriteMovies = {
-      getAllMovies: jest.fn(),
-      searchMovies: jest.fn(),
-    };
+    favoriteMovies = spyOnAllFunctions(FavoriteMovieIdb);
     presenter = new FavoriteMovieSearchPresenter({
       favoriteMovies,
+      view,
     });
   };
 
   beforeEach(() => {
-    setMovieSearchContaner();
+    setMovieSearchContainer();
     constructPresenter();
   });
 
