@@ -1,5 +1,5 @@
 import FavoriteMovieSearchPresenter from '../src/scripts/views/pages/liked-movies/favorite-movie-search-presenter';
-import FavoriteMovieSearchView from '../src/scripts/views/pages/liked-movies/favorite-movie-search-view';
+import FavoriteMovieView from '../src/scripts/views/pages/liked-movies/favorite-movie-view';
 
 describe('Searching movies', () => {
   let presenter;
@@ -14,7 +14,7 @@ describe('Searching movies', () => {
   };
 
   const setMovieSearchContainer = () => {
-    view = new FavoriteMovieSearchView();
+    view = new FavoriteMovieView();
     document.body.innerHTML = view.getTemplate();
   };
 
@@ -54,9 +54,9 @@ describe('Searching movies', () => {
 
     it('should show the movies found by Favorite Movies', (done) => {
       document
-        .getElementById('movie-search-container')
-        .addEventListener('movies:searched:updated', () => {
-          expect(document.querySelectorAll('.movie').length).toEqual(3);
+        .getElementById('movies')
+        .addEventListener('movies:updated', () => {
+          expect(document.querySelectorAll('.movie-item').length).toEqual(3);
 
           done();
         });
@@ -76,10 +76,24 @@ describe('Searching movies', () => {
       searchMovies('film a');
     });
 
+    it('should not show any movie', (done) => {
+      document
+        .getElementById('movies')
+        .addEventListener('movies:updated', () => {
+          expect(document.querySelectorAll('.movie-item').length).toEqual(0);
+
+          done();
+        });
+
+      favoriteMovies.searchMovies.mockImplementation((query) => []);
+
+      searchMovies('film a');
+    });
+
     it('should show the name of the movies found by Favorite Movies', (done) => {
       document
-        .getElementById('movie-search-container')
-        .addEventListener('movies:searched:updated', () => {
+        .getElementById('movies')
+        .addEventListener('movies:updated', () => {
           const movieTitles = document.querySelectorAll('.movie__title');
 
           expect(movieTitles.item(0).textContent).toEqual('film abc');
@@ -110,8 +124,8 @@ describe('Searching movies', () => {
 
     it('should show - when the movie returned does not contain a title', (done) => {
       document
-        .getElementById('movie-search-container')
-        .addEventListener('movies:searched:updated', () => {
+        .getElementById('movies')
+        .addEventListener('movies:updated', () => {
           const movieTitles = document.querySelectorAll('.movie__title');
           expect(movieTitles.item(0).textContent).toEqual('-');
 
@@ -155,21 +169,24 @@ describe('Searching movies', () => {
   describe('When no favorite movies could be found', () => {
     it('should show the empty message', (done) => {
       document
-        .getElementById('movie-search-container')
-        .addEventListener('movies:searched:updated', () => {
+        .getElementById('movies')
+        .addEventListener('movies:updated', () => {
           expect(
-            document.querySelectorAll('.movies__not__found').length,
+            document.querySelectorAll('.movie-item__not__found').length,
           ).toEqual(1);
+
           done();
         });
+
       favoriteMovies.searchMovies.mockImplementation((query) => []);
+
       searchMovies('film a');
     });
 
     it('should not show any movie', (done) => {
       document
-        .getElementById('movie-search-container')
-        .addEventListener('movies:searched:updated', () => {
+        .getElementById('movies')
+        .addEventListener('movies:updated', () => {
           expect(document.querySelectorAll('.movie').length).toEqual(0);
           done();
         });
